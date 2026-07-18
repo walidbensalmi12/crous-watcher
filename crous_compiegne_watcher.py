@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*- 
 """
 crous_compiegne_watcher.py  (cloud / GitHub Actions version)
 ==============================================================
