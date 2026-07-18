@@ -1,0 +1,39 @@
+name: CROUS Compiegne Watcher
+
+on:
+  schedule:
+    # Runs every 5 minutes -- this is the shortest interval GitHub
+    # Actions allows for scheduled workflows. Note: GitHub does not
+    # guarantee exact timing; it can lag a few extra minutes during
+    # busy periods, especially for private repos.
+    - cron: "*/5 * * * *"
+  workflow_dispatch: {}  # lets you also trigger it manually from the Actions tab
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Run watcher
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python crous_compiegne_watcher.py
+
+      - name: Commit updated state file (if changed)
+        run: |
+          git config user.name "crous-watcher-bot"
+          git config user.email "actions@github.com"
+          git add crous_compiegne_seen.json
+          git diff --staged --quiet || git commit -m "Update seen listings [skip ci]"
+          git push
