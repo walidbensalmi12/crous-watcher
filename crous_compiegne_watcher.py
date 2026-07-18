@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 """
 crous_compiegne_watcher.py  (cloud / GitHub Actions version)
 ==============================================================
@@ -25,6 +25,7 @@ import re
 import sys
 import time
 import logging
+from datetime import datetime, timedelta
 
 import requests
 from bs4 import BeautifulSoup
@@ -48,6 +49,13 @@ POSTAL_CODE = "60200"
 
 # --- State file (committed back to the repo by the GitHub Action) ---
 STATE_FILE = "crous_compiegne_seen.json"
+
+# --- "Still searching" heartbeat message ---
+# Sends one Telegram message per hour (only when NO listing is found)
+# between 7:10 and 17:xx local time, so you know the watcher is alive.
+TIMEZONE_OFFSET_HOURS = 1  # Algeria is UTC+1 year-round (no DST)
+HEARTBEAT_HOURS_LOCAL = list(range(7, 18))  # 07:00 .. 17:00 local
+HEARTBEAT_MINUTE_WINDOW = (5, 25)  # catch the run that lands near :10
 
 HEADERS = {
     "User-Agent": (
@@ -190,6 +198,15 @@ def format_notification(item):
     )
 
 
+def format_heartbeat_message(local_hour):
+    return (
+        "🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥\n"
+        "❌ <b>لا توجد غرفة متاحة حاليا في Compiègne</b>\n"
+        f"البحث مستمر... (تحديث الساعة {local_hour:02d}:00)\n"
+        "🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥"
+    )
+
+
 # ============================ SINGLE RUN ============================
 
 
@@ -223,6 +240,23 @@ def run_once():
         log.info("No change since last check.")
 
     seen.update(current)
+
+    # --- "Still searching" heartbeat (only when nothing is found) ---
+    local_now = datetime.utcnow() + timedelta(hours=TIMEZONE_OFFSET_HOURS)
+    local_hour = local_now.hour
+    local_minute = local_now.minute
+
+    if (
+        len(current) == 0
+        and local_hour in HEARTBEAT_HOURS_LOCAL
+        and HEARTBEAT_MINUTE_WINDOW[0] <= local_minute <= HEARTBEAT_MINUTE_WINDOW[1]
+    ):
+        heartbeat_key = f"{local_now.strftime('%Y-%m-%d')}_{local_hour:02d}"
+        if seen.get("_last_heartbeat") != heartbeat_key:
+            send_telegram_message(format_heartbeat_message(local_hour))
+            seen["_last_heartbeat"] = heartbeat_key
+            log.info("Sent heartbeat message for %s", heartbeat_key)
+
     save_seen_state(seen)
 
 
