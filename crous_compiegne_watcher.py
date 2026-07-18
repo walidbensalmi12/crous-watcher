@@ -55,7 +55,7 @@ STATE_FILE = "crous_compiegne_seen.json"
 # between 7:10 and 17:xx local time, so you know the watcher is alive.
 TIMEZONE_OFFSET_HOURS = 1  # Algeria is UTC+1 year-round (no DST)
 HEARTBEAT_HOURS_LOCAL = list(range(7, 18))  # 07:00 .. 17:00 local
-HEARTBEAT_MINUTE_WINDOW = (5, 25)  # catch the run that lands near :10
+HEARTBEAT_MINUTE_WINDOW = (8, 14)  # only the run landing near :10 qualifies
 
 HEADERS = {
     "User-Agent": (
@@ -201,8 +201,8 @@ def format_notification(item):
 def format_heartbeat_message(local_hour):
     return (
         "🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥\n"
-        "❌ <b>لا توجد غرفة متاحة حاليا في Compiègne</b>\n"
-        f"البحث مستمر... (تحديث الساعة {local_hour:02d}:00)\n"
+        "❌ <b>No room available in Compiegne right now</b>\n"
+        f"Still searching... (update at {local_hour:02d}:10)\n"
         "🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥"
     )
 
