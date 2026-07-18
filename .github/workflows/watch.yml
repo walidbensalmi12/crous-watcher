@@ -1,13 +1,7 @@
 name: CROUS Compiegne Watcher
 
 on:
-  schedule:
-    # Runs every 5 minutes -- this is the shortest interval GitHub
-    # Actions allows for scheduled workflows. Note: GitHub does not
-    # guarantee exact timing; it can lag a few extra minutes during
-    # busy periods, especially for private repos.
-    - cron: "*/5 * * * *"
-  workflow_dispatch: {}  # lets you also trigger it manually from the Actions tab
+  workflow_dispatch: {}  # triggered externally every 5 minutes by cron-job.org
 
 jobs:
   check:
@@ -36,4 +30,5 @@ jobs:
           git config user.email "actions@github.com"
           git add crous_compiegne_seen.json
           git diff --staged --quiet || git commit -m "Update seen listings [skip ci]"
+          git pull --rebase origin main || true
           git push
