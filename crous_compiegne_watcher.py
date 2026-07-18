@@ -43,8 +43,8 @@ SEARCH_TOOL_IDS = [42, 47]
 BASE_URL = "https://trouverunlogement.lescrous.fr/tools/{tool_id}/search"
 
 # --- Filtering on Compiegne ---
-CITY_KEYWORDS = ["CORTE"]
-POSTAL_CODE = "20250"
+CITY_KEYWORDS = ["COMPIEGNE", "COMPIÈGNE"]
+POSTAL_CODE = "60200"
 
 # --- State file (committed back to the repo by the GitHub Action) ---
 STATE_FILE = "crous_compiegne_seen.json"
