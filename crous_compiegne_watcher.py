@@ -25,7 +25,7 @@ import re
 import sys
 import time
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import requests
 from bs4 import BeautifulSoup
@@ -242,7 +242,7 @@ def run_once():
     seen.update(current)
 
     # --- "Still searching" heartbeat (only when nothing is found) ---
-    local_now = datetime.utcnow() + timedelta(hours=TIMEZONE_OFFSET_HOURS)
+    local_now = datetime.now(timezone.utc) + timedelta(hours=TIMEZONE_OFFSET_HOURS)
     local_hour = local_now.hour
     local_minute = local_now.minute
 
