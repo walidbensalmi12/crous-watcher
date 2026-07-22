@@ -33,10 +33,11 @@ from bs4 import BeautifulSoup
 # ============================ CONFIG ============================
 
 # --- Telegram ---
-# Reads from environment variables first (GitHub Actions secrets),
-# falls back to hardcoded values for local testing.
-TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "8996319223:AAGm5hb_yIaN4GX_iv_S6ZM7cdhpNMEcGdE")
-TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "1154764451")
+# Read ONLY from environment variables (GitHub Actions secrets).
+# No hardcoded fallback here on purpose, since this repo may be public
+# and hardcoding the token would expose it to anyone.
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
 
 # --- Website ---
 # 47 = next academic year (2026-2027) | 42 = current year (2025-2026)
