@@ -6,5 +6,12 @@
     "name": "RESIDENCE DES PEUPLIERS",
     "url": "https://trouverunlogement.lescrous.fr/tools/47/accommodations/1726",
     "raw_text": "RESIDENCE DES PEUPLIERS | 1 square de la peupleraie 60200 COMPIEGNE | 19 mÂ² | Individuel | 1 lit simple | WC, Douche, Evier + plaque, Frigo"
+  },
+  "47:1216": {
+    "id": "1216",
+    "tool_id": 47,
+    "name": "RESIDENCE ROBERVAL",
+    "url": "https://trouverunlogement.lescrous.fr/tools/47/accommodations/1216",
+    "raw_text": "RESIDENCE ROBERVAL | 1 rue Bachaga Boualem 60200 COMPIEGNE | 9 mÂ² | Individuel | 1 lit simple | WC, Douche, Frigo"
   }
 }
